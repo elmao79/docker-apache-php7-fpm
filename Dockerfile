@@ -1,28 +1,20 @@
 #
 # Version: 1.0.1
 #
-FROM debian:rc-buggy
+FROM debian:buster
 MAINTAINER Oscar Martin "oscar@omartin.es"
 
 ENV REFRESHED_AT 2018-04-25
 
-RUN apt-get update; apt-get install -y apt-utils apache2 net-tools
-RUN apt-get install -y curl git zip unzip vim locales software-properties-common
-
-# Set up locales
-RUN locale-gen en_US.UTF-8
-ENV LANG C.UTF-8
-ENV LANGUAGE C.UTF-8
-ENV LC_ALL C.UTF-8
-RUN /usr/sbin/update-locale
+RUN apt-get update; apt-get install -y apache2 net-tools vim curl
 
 ADD rootfs /
 
-RUN apt-get install -y php7.2-fpm
+RUN apt-get install -y php7.2-fpm php7.2-mysql php7.2-pgsql php7.2-mbstring php7.2-curl php7.2-gd \
+            php7.2-zip php7.2-sybase php7.2-opcache
 
 RUN a2enmod proxy proxy_fcgi
-COPY php7.1-fpm.conf /etc/apache2/conf-available/php7.1-fpm.conf
-RUN a2enconf php7.1-fpm
+RUN a2enconf php7.2-fpm
 
 RUN mkdir -p /run/php
 
