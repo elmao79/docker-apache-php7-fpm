@@ -13,7 +13,7 @@ ADD rootfs /
 RUN apt-get install -y php7.2-fpm php7.2-mysql php7.2-pgsql php7.2-mbstring php7.2-curl php7.2-gd \
             php7.2-zip php7.2-sybase php7.2-opcache
 
-RUN a2enmod proxy proxy_fcgi
+RUN a2enmod proxy proxy_fcgi rewrite expires headers
 RUN a2enconf php7.2-fpm
 
 RUN mkdir -p /run/php
@@ -26,5 +26,6 @@ RUN ln -sf /dev/stderr /var/log/apache2/error.log
 
 EXPOSE 80
 
-RUN php-fpm7.2
-CMD php-fpm7.2 && /usr/sbin/apache2ctl -D FOREGROUND
+COPY run.sh run.sh
+
+CMD ./run.sh
